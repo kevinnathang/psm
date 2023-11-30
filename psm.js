@@ -3,7 +3,7 @@ const fs = require("fs");
 
 const args = process.argv.slice(2);
 
-// Check if the required arguments are provided
+// Check if the required arguments are provided at node command line
 if (args.length !== 2 || args[0] !== "--csvfile") {
   console.log(
     `Please provide the CSV file using '--csvfile' argument. Make sure the end of the file contains ".csv"`
@@ -37,7 +37,7 @@ const csvFilePath = args[1];
       return array.filter((data) => data >= limit).length / sampleNum;
     }
 
-    //Set differente aways for the 4 types of prices
+    //Set differente arrays for the 4 types of prices
     const expensive = [];
     const tooExpensive = [];
     const cheap = [];
@@ -58,9 +58,7 @@ const csvFilePath = args[1];
       const count2 = calculateCountifLow(dataTooLow, i);
       tooCheap.push({ key: i, value: count2.toFixed(2) });
     }
-    //   console.log(expensive, cheap, tooExpensive, tooCheap);
 
-    //最高価格 = tooExpensive and cheap
     function calc最高価格() {
       const C3 = `${tooExpensive[4].key}`;
       const D3 = `${tooExpensive[4].value}`;
