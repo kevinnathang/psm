@@ -33,17 +33,40 @@ const fs = require("fs");
   //Calculate count for 高い and 高すぎる
   for (let i = 50; i <= 600; i += 50) {
     const count = calculateCountifHigh(dataHigh, i);
-    expensive.push({ key: i, value: count.toFixed(3) });
+    expensive.push({ key: i, value: count.toFixed(2) });
     const count2 = calculateCountifHigh(dataVeryHigh, i);
-    tooExpensive.push({ key: i, value: count2.toFixed(3) });
+    tooExpensive.push({ key: i, value: count2.toFixed(2) });
   }
 
   //Calculate count for 安い and 安すぎる
   for (let i = 50; i <= 600; i += 50) {
     const count = calculateCountifLow(dataLow, i);
-    cheap.push({ key: i, value: count.toFixed(3) });
+    cheap.push({ key: i, value: count.toFixed(2) });
     const count2 = calculateCountifLow(dataTooLow, i);
-    tooCheap.push({ key: i, value: count2.toFixed(3) });
+    tooCheap.push({ key: i, value: count2.toFixed(2) });
   }
-  console.log(expensive, cheap, tooExpensive, tooCheap);
+  //   console.log(expensive, cheap, tooExpensive, tooCheap);
+
+  //最高価格 = tooExpensive and cheap
+  function calc最高価格() {
+    const C3 = `${tooExpensive[4].key}`;
+    const D3 = `${tooExpensive[4].value}`;
+    const C4 = `${tooExpensive[5].key}`;
+    const D4 = `${tooExpensive[5].value}`;
+
+    const C5 = `${cheap[4].key}`;
+    const D5 = `${cheap[4].value}`;
+    const C6 = `${cheap[5].key}`;
+    const D6 = `${cheap[5].value}`;
+
+    return console.log(
+      `最高価格: ${
+        ((D5 - D3) * (C3 - C4) * (C5 - C6) +
+          C3 * (D3 - D4) * (C5 - C6) -
+          C5 * (D5 - D6) * (C3 - C4)) /
+        ((D3 - D4) * (C5 - C6) - (C3 - C4) * (D5 - D6))
+      }`
+    );
+  }
+  calc最高価格();
 })();
