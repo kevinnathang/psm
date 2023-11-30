@@ -60,13 +60,79 @@ const fs = require("fs");
     const D6 = `${cheap[5].value}`;
 
     return console.log(
-      `最高価格: ${
+      `最高価格: ${Math.round(
         ((D5 - D3) * (C3 - C4) * (C5 - C6) +
           C3 * (D3 - D4) * (C5 - C6) -
           C5 * (D5 - D6) * (C3 - C4)) /
-        ((D3 - D4) * (C5 - C6) - (C3 - C4) * (D5 - D6))
-      }`
+          ((D3 - D4) * (C5 - C6) - (C3 - C4) * (D5 - D6))
+      )}円`
     );
   }
+
+  function calc妥協価格() {
+    const C3 = `${expensive[4].key}`;
+    const D3 = `${expensive[4].value}`;
+    const C4 = `${expensive[5].key}`;
+    const D4 = `${expensive[5].value}`;
+
+    const C5 = `${cheap[4].key}`;
+    const D5 = `${cheap[4].value}`;
+    const C6 = `${cheap[5].key}`;
+    const D6 = `${cheap[5].value}`;
+
+    return console.log(
+      `妥協価格: ${Math.round(
+        ((D5 - D3) * (C3 - C4) * (C5 - C6) +
+          C3 * (D3 - D4) * (C5 - C6) -
+          C5 * (D5 - D6) * (C3 - C4)) /
+          ((D3 - D4) * (C5 - C6) - (C3 - C4) * (D5 - D6))
+      )}円`
+    );
+  }
+
+  function calc理想価格() {
+    const C3 = `${tooExpensive[4].key}`;
+    const D3 = `${tooExpensive[4].value}`;
+    const C4 = `${tooExpensive[5].key}`;
+    const D4 = `${tooExpensive[5].value}`;
+
+    const C5 = `${tooCheap[4].key}`;
+    const D5 = `${tooCheap[4].value}`;
+    const C6 = `${tooCheap[5].key}`;
+    const D6 = `${tooCheap[5].value}`;
+
+    return console.log(
+      `理想価格: ${Math.round(
+        ((D5 - D3) * (C3 - C4) * (C5 - C6) +
+          C3 * (D3 - D4) * (C5 - C6) -
+          C5 * (D5 - D6) * (C3 - C4)) /
+          ((D3 - D4) * (C5 - C6) - (C3 - C4) * (D5 - D6))
+      )}円`
+    );
+  }
+
+  function calc最低品質保証価格() {
+    const C3 = `${expensive[4].key}`;
+    const D3 = `${expensive[4].value}`;
+    const C4 = `${expensive[5].key}`;
+    const D4 = `${expensive[5].value}`;
+
+    const C5 = `${tooCheap[4].key}`;
+    const D5 = `${tooCheap[4].value}`;
+    const C6 = `${tooCheap[5].key}`;
+    const D6 = `${tooCheap[5].value}`;
+
+    return console.log(
+      `最低品質保証価格: ${Math.round(
+        ((D5 - D3) * (C3 - C4) * (C5 - C6) +
+          C3 * (D3 - D4) * (C5 - C6) -
+          C5 * (D5 - D6) * (C3 - C4)) /
+          ((D3 - D4) * (C5 - C6) - (C3 - C4) * (D5 - D6))
+      )}円`
+    );
+  }
+  calc最低品質保証価格();
+  calc理想価格();
+  calc妥協価格();
   calc最高価格();
 })();
