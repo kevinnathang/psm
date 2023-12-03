@@ -43,113 +43,90 @@ const csvFilePath = args[1];
     const cheap = []; //安いと思う人数
     const tooCheap = []; //安すぎると思う人数
 
-    //高いと高すぎるのカウントを計算する、正しい配列にパッシュ
+    //値段を正しい配列に入れる
     for (let i = 50; i <= 600; i += 50) {
-      const count = calculateCountifHigh(dataHigh, i);
-      expensive.push({ key: i, value: count.toFixed(2) });
-      const count2 = calculateCountifHigh(dataVeryHigh, i);
-      tooExpensive.push({ key: i, value: count2.toFixed(2) });
+      const countHigh = calculateCountifHigh(dataHigh, i);
+      expensive.push({ key: i, value: countHigh.toFixed(2) });
+
+      const countVeryHigh = calculateCountifHigh(dataVeryHigh, i);
+      tooExpensive.push({ key: i, value: countVeryHigh.toFixed(2) });
+
+      const countLow = calculateCountifLow(dataLow, i);
+      cheap.push({ key: i, value: countLow.toFixed(2) });
+
+      const countTooLow = calculateCountifLow(dataTooLow, i);
+      tooCheap.push({ key: i, value: countTooLow.toFixed(2) });
     }
 
-    //安いと安すぎるのカウントを計算する、正しい配列にパッシュ
-    for (let i = 50; i <= 600; i += 50) {
-      const count = calculateCountifLow(dataLow, i);
-      cheap.push({ key: i, value: count.toFixed(2) });
-      const count2 = calculateCountifLow(dataTooLow, i);
-      tooCheap.push({ key: i, value: count2.toFixed(2) });
-    }
-
-    //EXCELのグラフに基づいて、関数の配列インデックスを決定する。
-    //線が250円と300円の間で交差する場合、インデックス4と5を使用。
-    //線が200円と250円の間で交差する場合は、インデックス3と4を使用する。
-    function calc最高価格() {
-      const x1 = `${tooExpensive[4].key}`; // x1
-      const y1 = `${tooExpensive[4].value}`; // y1
-      const x2 = `${tooExpensive[5].key}`; // x2
-      const y2 = `${tooExpensive[5].value}`; // y2
-
-      const x3 = `${cheap[4].key}`; // x3
-      const y3 = `${cheap[4].value}`; // y3
-      const x4 = `${cheap[5].key}`; // x4
-      const y4 = `${cheap[5].value}`; // y4
-
-      //PDFファイルからの数学を使う
-      return console.log(
-        `最高価格: ${Math.round(
-          ((y3 - y1) * (x1 - x2) * (x3 - x4) +
-            x1 * (y1 - y2) * (x3 - x4) -
-            x3 * (y3 - y4) * (x1 - x2)) /
-            ((y1 - y2) * (x3 - x4) - (x1 - x2) * (y3 - y4))
-        )}円`
+    //提供されたPDFファイルからの数学を使う
+    function calculatePrice(x1, y1, x2, y2, x3, y3, x4, y4) {
+      return Math.round(
+        ((y3 - y1) * (x1 - x2) * (x3 - x4) +
+          x1 * (y1 - y2) * (x3 - x4) -
+          x3 * (y3 - y4) * (x1 - x2)) /
+          ((y1 - y2) * (x3 - x4) - (x1 - x2) * (y3 - y4))
       );
     }
 
-    function calc妥協価格() {
-      const x1 = `${expensive[4].key}`;
-      const y1 = `${expensive[4].value}`;
-      const x2 = `${expensive[5].key}`;
-      const y2 = `${expensive[5].value}`;
-
-      const x3 = `${cheap[4].key}`;
-      const y3 = `${cheap[4].value}`;
-      const x4 = `${cheap[5].key}`;
-      const y4 = `${cheap[5].value}`;
-
-      return console.log(
-        `妥協価格: ${Math.round(
-          ((y3 - y1) * (x1 - x2) * (x3 - x4) +
-            x1 * (y1 - y2) * (x3 - x4) -
-            x3 * (y3 - y4) * (x1 - x2)) /
-            ((y1 - y2) * (x3 - x4) - (x1 - x2) * (y3 - y4))
-        )}円`
-      );
+    //ラベルを作る
+    function printPrice(label, price) {
+      console.log(`${label}: ${price}円`);
     }
 
-    function calc理想価格() {
-      const x1 = `${tooExpensive[4].key}`;
-      const y1 = `${tooExpensive[4].value}`;
-      const x2 = `${tooExpensive[5].key}`;
-      const y2 = `${tooExpensive[5].value}`;
-
-      const x3 = `${tooCheap[4].key}`;
-      const y3 = `${tooCheap[4].value}`;
-      const x4 = `${tooCheap[5].key}`;
-      const y4 = `${tooCheap[5].value}`;
-
-      return console.log(
-        `理想価格: ${Math.round(
-          ((y3 - y1) * (x1 - x2) * (x3 - x4) +
-            x1 * (y1 - y2) * (x3 - x4) -
-            x3 * (y3 - y4) * (x1 - x2)) /
-            ((y1 - y2) * (x3 - x4) - (x1 - x2) * (y3 - y4))
-        )}円`
-      );
+    //数学とラベルを使う
+    function calculateAndPrintPrice(label, x1, y1, x2, y2, x3, y3, x4, y4) {
+      const price = calculatePrice(x1, y1, x2, y2, x3, y3, x4, y4);
+      printPrice(label, price);
     }
 
-    function calc最低品質保証価格() {
-      const x1 = `${expensive[3].key}`;
-      const y1 = `${expensive[3].value}`;
-      const x2 = `${expensive[4].key}`;
-      const y2 = `${expensive[4].value}`;
+    //四つの値段
+    calculateAndPrintPrice(
+      "最高価格",
+      tooExpensive[4].key,
+      tooExpensive[4].value,
+      tooExpensive[5].key,
+      tooExpensive[5].value,
+      cheap[4].key,
+      cheap[4].value,
+      cheap[5].key,
+      cheap[5].value
+    );
 
-      const x3 = `${tooCheap[3].key}`;
-      const y3 = `${tooCheap[3].value}`;
-      const x4 = `${tooCheap[4].key}`;
-      const y4 = `${tooCheap[4].value}`;
+    calculateAndPrintPrice(
+      "妥協価格",
+      expensive[4].key,
+      expensive[4].value,
+      expensive[5].key,
+      expensive[5].value,
+      cheap[4].key,
+      cheap[4].value,
+      cheap[5].key,
+      cheap[5].value
+    );
 
-      return console.log(
-        `最低品質保証価格: ${Math.round(
-          ((y3 - y1) * (x1 - x2) * (x3 - x4) +
-            x1 * (y1 - y2) * (x3 - x4) -
-            x3 * (y3 - y4) * (x1 - x2)) /
-            ((y1 - y2) * (x3 - x4) - (x1 - x2) * (y3 - y4))
-        )}円`
-      );
-    }
-    calc最低品質保証価格();
-    calc理想価格();
-    calc妥協価格();
-    calc最高価格();
+    calculateAndPrintPrice(
+      "理想価格",
+      tooExpensive[4].key,
+      tooExpensive[4].value,
+      tooExpensive[5].key,
+      tooExpensive[5].value,
+      tooCheap[4].key,
+      tooCheap[4].value,
+      tooCheap[5].key,
+      tooCheap[5].value
+    );
+
+    calculateAndPrintPrice(
+      "最低品質保証価格",
+      expensive[3].key,
+      expensive[3].value,
+      expensive[4].key,
+      expensive[4].value,
+      tooCheap[3].key,
+      tooCheap[3].value,
+      tooCheap[4].key,
+      tooCheap[4].value
+    );
   } catch (error) {
     console.error("エラーが発生した:", error);
   }
